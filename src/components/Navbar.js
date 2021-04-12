@@ -1,9 +1,22 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
 
 import { Navbar, Nav, Container } from 'react-bootstrap'
 
+import {useSelector, useDispatch} from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import {logout} from '../actions'
+
 function NavbarComponent() {
+    
+    const history = useHistory()
+    const isLogged = useSelector(state => state.isLogged)
+    const dispatch = useDispatch()
+
+    const actionLogout = () => {
+        dispatch(logout())
+        history.push("/login")
+    }
+
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
@@ -11,11 +24,10 @@ function NavbarComponent() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href='/user'>User List</Nav.Link>
+                    {isLogged ? <Nav.Link href='/user'>User List</Nav.Link> : ''}
                 </Nav>
                 <Nav>
-                    <Nav.Link href='/login'>Login</Nav.Link>
-                    <Nav.Link>Logout</Nav.Link>
+                    {isLogged ? <Nav.Link onClick={actionLogout}>Logout</Nav.Link> : <Nav.Link href='/login'>Login</Nav.Link>}
                 </Nav>
                 </Navbar.Collapse>
             </Container>
